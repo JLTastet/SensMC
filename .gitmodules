@@ -1,0 +1,3 @@
+[submodule "lib/Simulation/scalar_portal"]
+	path = lib/Simulation/scalar_portal
+	url = git@github.com:JLTastet/scalar_portal.git
