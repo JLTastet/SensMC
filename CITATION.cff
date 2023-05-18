@@ -1,0 +1,13 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+authors:
+- family-names: "Tastet"
+  given-names: "Jean-Loup"
+  orcid: "https://orcid.org/0000-0003-1763-378X"
+- family-names: "Ovchynnikov"
+  given-names: "Maksym"
+  orcid: "https://orcid.org/0000-0001-7002-5201"
+title: "SensMC"
+version: 1.0.0
+date-released: 2023-05-19
+url: "https://github.com/JLTastet/SensMC"
