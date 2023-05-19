@@ -1,6 +1,6 @@
 # SensMC
 
-A toy Monte-Carlo event generator written in Julia, used to validate SensCalc.
+A customizable Monte-Carlo event generator written in Julia, used to validate SensCalc.
 
 In its current version, it can simulate a dark scalar mixed with the Standard Model Higgs at the SHiP, SHADOWS and MATHUSLA experiments.
 
@@ -13,10 +13,11 @@ You will need to clone both this repository and its submodule `scalar_portal`:
 $ git clone --recurse-submodules https://github.com/JLTastet/SensMC.git
 $ cd SensMC/
 ```
+⚠️ The `--recurse-submodules` option is necessary in order for git to also clone the `scalar_portal` package.
 
 ### Setting up the environment
 
-Then, install the Python dependencies, optionally within a virtual environment:
+Then, install the Python dependencies, optionally within a virtual environment (recommended):
 ```
 $ pyenv virtualenv 3.11.2 senscalc
 $ pyenv activate senscalc
@@ -29,6 +30,10 @@ $ julia --project=. -q  # Start julia using the project found in the current dir
 (SensMC) pkg> instantiate
 ```
 This will install all the necessary dependencies and precompile them.
+
+⚠️ **Important:** for the code to work, you must activate the `SensMC` Julia environment whenever you start `julia`. This can be done either by passing the `--project=.` option on the command line, or at the REPL prompt by pressing `]` to go into "pkg" mode and then entering `activate .`. If everything worked, the prompt in "pkg" mode should change to `(SensMC) pkg>`.
+
+In case you encounter a `TaskFailedException`, `LoadError: PyError` or `ModuleNotFoundError` when loading code, it most likely means that something is wrong with how the environment is set up. Please refer to the "Troubleshooting" section below.
 
 ### External resources
 
@@ -177,3 +182,24 @@ This code makes extensive use of docstrings. You can consult them directly from 
 ```
 help?> Simulation
 ```
+
+## Troubleshooting
+
+### Environment problems
+
+**Typical symptoms:** `TaskFailedException`, `LoadError: PyError`, `ModuleNotFoundError`, ...
+
+If you are using a Python virtual environment (especially if using something different from `pyenv`) or if you have multiple versions of Python installed on your system, it is possible that Julia is not calling the correct one.
+
+First, don't forget to enable your Python virtual environment _before_ starting `julia`, if you are using one.
+Then, check that you are also activating the Julia environment, either by passing the `--project=.` option on the command line when you launch `julia`, or at the REPL prompt by pressing `]` to go into "pkg" mode and then entering `activate .`. If everything worked, the prompt in "pkg" mode should change to `(SensMC) pkg>`.
+
+You can finally check if `PyCall` is configured to use the desired Python version by checking whether the outputs of `using PyCall; PyCall.python` and `Sys.which("python")` agree (note that this is a necessary but not sufficient condition for things to work).
+If they differ, rebuild `PyCall` against the correct Python version as follows:
+```julia
+julia> ENV["PYTHON"] = Sys.which("python")
+(SensMC) pkg> build PyCall
+```
+Then restart `julia` to apply the changes.
+
+If you are using an ARM-based Mac, both Julia and Python should be built for the same CPU architecture.
