@@ -1,3 +1,4 @@
 [submodule "lib/Simulation/scalar_portal"]
 	path = lib/Simulation/scalar_portal
-	url = git@github.com:JLTastet/scalar_portal.git
+	url = https://github.com/JLTastet/scalar_portal.git
+	branch = charm_quarks_fragmentation
