@@ -190,12 +190,14 @@ function plot!(ed::EventDisplay)
     push!(ed.vertices.val, rotate_coordinates(convert(Makie.Point3f0, ed.evt.vertex / m)))
     append!(ed.segments.val, fip_segment)
     push!(ed.colors.val, ed.colorscheme(ed.evt.record[fip_index], ed))
-    @assert ed.z_max > ed.evt.vertex.z
+    if ed.evt.vertex.z >= ed.z_max
+        @warn "The FIP decayed too far, and the event may not display properly. Enable importance sampling and set L_max_meters < z_max_meters in Simulation to avoid this issue." maxlog=1
+    end
     for i in fip_index+1:length(ed.evt.record)
         if ed.evt.is_live[i]
             p = P_(ed.evt.record[i])
             segment = [rotate_coordinates(convert(Makie.Point3f0, p))
-                       for p in [ed.evt.vertex, ed.evt.vertex + Vec3(p)/abs(p.z) * (ed.z_max - ed.evt.vertex.z)] / m]
+                       for p in [ed.evt.vertex, ed.evt.vertex + Vec3(p)/abs(p.z) * abs(ed.z_max - ed.evt.vertex.z)] / m]
             append!(ed.segments.val, segment)
             push!(ed.colors.val, ed.colorscheme(ed.evt.record[i], ed))
         end
