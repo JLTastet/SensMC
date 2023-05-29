@@ -460,13 +460,16 @@ function list_open_scalar_decay_channels(M::Float64, θ::Float64, α::Float64)
         if BR == 0
             continue
         elseif key == "S -> mesons..."
-            @info "Multi-meson decay channel not simulated."
-            continue
+            push!(branching_ratios, 1/3*BR, 2/3*BR)
+            push!(scalar_decay_samplers,
+                  UniformSampler(S, Field( 111), Field( 111)),
+                  UniformSampler(S, Field(+211), Field(-211)))
+            @info "Pooling the multi-meson decays with S -> ππ, in a 2:1 charged-neutral ratio."
+        else
+            sampler = UniformSampler(S, (Field(get_pdg_id(c), get_kinematic_mass(c)) for c in ch._children)...)
+            push!(branching_ratios     , BR     )
+            push!(scalar_decay_samplers, sampler)
         end
-
-        sampler = UniformSampler(S, (Field(get_pdg_id(c), get_kinematic_mass(c)) for c in ch._children)...)
-        push!(branching_ratios     , BR     )
-        push!(scalar_decay_samplers, sampler)
     end
 
     if sum(branching_ratios) == 0.
