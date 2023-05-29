@@ -428,7 +428,7 @@ function list_open_scalar_decay_channels(M::Float64, θ::Float64, α::Float64)
     if M < 2.0GeV
         model.decay.enable("LightScalar")
     else
-        model.decay.enable("HeavyScalar_LightCharmedHadrons")
+        model.decay.enable("HeavyScalar_Mesons")
     end
     res = model.compute_branching_ratios(M, theta=θ, alpha=α)
     total_width = res.decay.total_width
